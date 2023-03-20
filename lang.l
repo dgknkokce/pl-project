@@ -24,8 +24,13 @@ func                   return 15;
 "{"                    return 16;
 "}"                    return 17;
 return                 return 18;
-
-
+[-]?[a-zA-Z]+          return 1;
+[-]?[0-9]+             return 2;
+[-]?[0-9]+\.[0-9]+     return 3;
+[ \t]                  ;
+";"                    return 13;
+"\n"		       {yylineno++;}
+.                      printf("Error, unexpected character in line %d !\n", yylineno);
 %%
 int yywrap(void){
         return 1;
