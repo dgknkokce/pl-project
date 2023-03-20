@@ -1,0 +1,19 @@
+a=22;
+b=3.2;
+c=false;
+t=true;
+WRITE(a+b);
+func calculate(){
+return a;
+
+}
+if
+elseif
+for
+while
+;;;
+else
+EXIT;
+
+?????? 
+
