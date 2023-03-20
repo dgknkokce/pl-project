@@ -1,6 +1,6 @@
 Group Members: Şükran Şafak Barutçu(20190808003), Doğukan Kökce(20180808009)
 
-#Language Name
+#Language Name: Mylang
 --
 
 ## Syntax
