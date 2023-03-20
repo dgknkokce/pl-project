@@ -1,4 +1,4 @@
-Group Members: Şafak Barutçu, Doğukan Kökce(20180808009)
+Group Members: Şükran Şafak Barutçu(20190808003), Doğukan Kökce(20180808009)
 
 #Language Name
 --
