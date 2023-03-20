@@ -17,6 +17,14 @@ elseif                 return 20;
 while                  return 21;
 for                    return 22;
 else                   return 23;
+"<"                    return 24;
+">"                    return 25;
+true|false             return 14;
+func                   return 15;
+"{"                    return 16;
+"}"                    return 17;
+return                 return 18;
+
 
 %%
 int yywrap(void){
