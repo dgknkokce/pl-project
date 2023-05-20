@@ -70,3 +70,32 @@ func_declaration: FUNCTION ID PAROPEN PARCLOSE CBOPEN statement_list CBCLOSE {pr
 return_statement: RETURN expression {printf("Returning value %f\n", $2);} ;
 
 expression_statement: expression ;
+
+
+expression: expression ADD expression {$$ = $1 + $3;}
+          | expression SUBTRACT expression {$$ = $1 - $3;}
+          | expression MULTIPLY expression {$$ = $1 * $3;}
+          | expression DIVIDE expression {$$ = $1 / $3;}
+          | PAROPEN expression PARCLOSE {$$ = $2;}
+          | SUBTRACT expression %prec UMINUS {$$ = -$2;}
+          | ID {$$ = $1;}
+          | NUM {$$ = $1;}
+          | FNUM {$$ = $1;}
+          | BOOLEAN {printf("Boolean %s\n", $1);}
+          ;
+
+%%
+
+int main() {
+    printf("Token list:\n");
+    for(int i=1; i<=25; i++) {
+        printf("%d: %s\n", i, text[i]);
+    }
+    printf("\n");
+    yyparse();
+    return 0;
+}
+
+void yyerror(const char* s) {
+    printf("%s\n", s);
+}
