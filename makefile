@@ -1,5 +1,16 @@
-lang:lang.l
-	 lex lang.l
-	gcc myscanner.c lex.yy.c -o test
+CC = gcc
+LEX = flex
+YACC = bison
+CFLAGS = -Wall
+
+lang: lang.tab.o lex.yy.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+lang.tab.c lang.tab.h: lang.y
+	$(YACC) -d $<
+
+lex.yy.c: lang.l lang.tab.h
+	$(LEX) $<
+
 clean:
-	 rm lang lex.yy.c
+	rm -f lang .o lex.yy.c lang.tab.
