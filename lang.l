@@ -13,6 +13,7 @@ extern char* yytext;
 \n                      { yylineno++; }
 "=="                    { return EQUALS; }
 "="                     { return ASSIGNMENT; }
+","                     { return COMMA; }
 ";"                     { return SEMICOLON; }
 "+"                     { return ADD; }
 "-"                     { return SUBTRACT; }
