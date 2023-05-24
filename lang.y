@@ -1,128 +1,94 @@
 %{
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "mylangcommon.h"
+
 extern int yylex();
 extern int yylineno;
 extern char* yytext;
-void yyerror(char*);
+
+void yyerror(const char* s) {
+    fprintf(stderr, "Error: %s in line %d\n", s, yylineno);
+}
+
 %}
 
-%token IDENTIFIER INTEGER DOUBLE EQUALS WRITE PAROPEN PARCLOSE EXIT ADD MULTIPLY SUBTRACT DIVIDE SEMICOLON BOOLEAN FUNCTION CBOPEN CBCLOSE RETURN IF ELSEIF WHILE FOR ELSE LOWER GREATER
+%token WRITE EXIT LPAREN RPAREN PLUS TIMES MINUS DIVIDE ASSIGN IF ELSEIF WHILE FOR ELSE LT GT TRUE FALSE FUNC LBRACE RBRACE RETURN IDENTIFIER INTEGER FLOAT SEMICOLON NEWLINE
+
+%left PLUS MINUS
+%left TIMES DIVIDE
+%nonassoc UMINUS
 
 %%
 
-program : statements
+program : statement_list
         ;
 
-statements : statement SEMICOLON
-           | statements statement SEMICOLON
-           ;
+statement_list : statement
+               | statement_list statement
+               ;
 
-statement : assignment
+statement : assignment_statement
           | write_statement
-          | exit_statement
-          | conditional_statement
-          | loop_statement
-          | function_declaration
+          | if_statement
+          | while_statement
+          | for_statement
           | return_statement
           ;
 
-assignment : IDENTIFIER EQUALS expression
-           ;
-
-expression : term
-           | expression ADD term
-           | expression SUBTRACT term
-           ;
-
-term : factor
-     | term MULTIPLY factor
-     | term DIVIDE factor
-     ;
-
-factor : value
-       | SUBTRACT value
-       ;
-
-value : INTEGER
-      | DOUBLE
-      | boolean_value
-      | IDENTIFIER
-      | function_call
-      | PAROPEN expression PARCLOSE
-      ;
-
-boolean_value : BOOLEAN
-              ;
-
-function_call : FUNCTION PAROPEN argument_list PARCLOSE
-              ;
-
-argument_list : expression
-              | argument_list ADD expression
-              ;
-
-write_statement : WRITE value
-                ;
-
-exit_statement : EXIT
-               ;
-
-conditional_statement : if_statement
-                      | if_else_statement
-                      | if_elseif_else_statement
-                      ;
-
-if_statement : IF PAROPEN expression PARCLOSE CBOPEN statements CBCLOSE
-             ;
-
-if_else_statement : IF PAROPEN expression PARCLOSE CBOPEN statements CBCLOSE ELSE CBOPEN statements CBCLOSE
-                  ;
-
-if_elseif_else_statement : IF PAROPEN expression PARCLOSE CBOPEN statements CBCLOSE elseif_list else_part
-                          ;
-
-elseif_list : ELSEIF PAROPEN expression PARCLOSE CBOPEN statements CBCLOSE
-            | elseif_list ELSEIF PAROPEN expression PARCLOSE CBOPEN statements CBCLOSE
-            ;
-
-else_part : ELSE CBOPEN statements CBCLOSE
-          ;
-
-loop_statement : while_statement
-               | for_statement
-               ;
-
-while_statement : WHILE PAROPEN expression PARCLOSE CBOPEN statements CBCLOSE
-                ;
-
-for_statement : FOR PAROPEN assignment SEMICOLON expression SEMICOLON assignment PARCLOSE CBOPEN statements CBCLOSE
-              ;
-
-function_declaration : FUNCTION IDENTIFIER PAROPEN parameter_list PARCLOSE CBOPEN statements CBCLOSE
+assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON
                      ;
 
-parameter_list : /* empty */
-               | parameter
-               | parameter_list COMMA parameter
-               ;
+write_statement : WRITE expression SEMICOLON
+                ;
 
-parameter : IDENTIFIER
+if_statement : IF LPAREN expression RPAREN LBRACE statement_list RBRACE
+             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE ELSE LBRACE statement_list RBRACE
+             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elseif_statement_list
+             | IF LPAREN expression RPAREN LBRACE statement_list RBRACE elseif_statement_list ELSE LBRACE statement_list RBRACE
+             ;
+
+elseif_statement_list : elseif_statement
+                      | elseif_statement_list elseif_statement
+                      ;
+
+elseif_statement : ELSEIF LPAREN expression RPAREN LBRACE statement_list RBRACE
+                 ;
+
+while_statement : WHILE LPAREN expression RPAREN LBRACE statement_list RBRACE
+                ;
+
+for_statement : FOR LPAREN assignment_statement SEMICOLON expression SEMICOLON assignment_statement RPAREN LBRACE statement_list RBRACE
+              ;
+
+return_statement : RETURN expression SEMICOLON
+                 ;
+
+expression : LPAREN expression RPAREN %prec UMINUS
+           | expression PLUS expression
+           | expression MINUS expression
+           | expression TIMES expression
+           | expression DIVIDE expression
+           | expression LT expression
+           | expression GT expression
+           | TRUE
+           | FALSE
+           | IDENTIFIER
+           | INTEGER
+           | FLOAT
+           | func_call
+           ;
+
+func_call : FUNC LPAREN expression_list RPAREN
           ;
 
-return_statement : RETURN value
-                 ;
+expression_list : expression
+                | expression_list COMMA expression
+                ;
 
 %%
 
-void yyerror(char* s) {
-    fprintf(stderr, "Error: %s at line %d near token %s\n", s, yylineno, yytext);
-    exit(1);
-}
-
-int main(void) {
-    int token = yyparse();
+int main() {
+    yyparse();
     return 0;
 }
+
