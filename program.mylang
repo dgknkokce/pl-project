@@ -1,0 +1,6 @@
+write "Enter two numbers: ";
+a = read();
+b = read();
+sum = a + b;
+write "The sum is: ";
+write sum;

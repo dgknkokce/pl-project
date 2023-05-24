@@ -1,38 +1,38 @@
 %{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "mylangcommon.h"
+extern int yylineno;
+extern char* yytext;
 %}
+%option noyywrap
 
 %%
-"WRITE"                return 5;
-"EXIT"                 return 8;
-"("                    return 6;
-")"                    return 7;
-"+"                    return 9;
-"*"                    return 10;
-"-"                    return 11;
-"/"                    return 12;
-"="                    return 4;
-if                     return 19;
-elseif                 return 20;
-while                  return 21;
-for                    return 22;
-else                   return 23;
-"<"                    return 24;
-">"                    return 25;
-true|false             return 14;
-func                   return 15;
-"{"                    return 16;
-"}"                    return 17;
-return                 return 18;
-[-]?[a-zA-Z]+          return 1;
-[-]?[0-9]+             return 2;
-[-]?[0-9]+\.[0-9]+     return 3;
-[ \t]                  ;
-";"                    return 13;
-"\n"		       {yylineno++;}
-.                      printf("Error, unexpected character in line %d !\n", yylineno);
+[ \t]                   /* ignore whitespaces */
+\n                      { yylineno++; }
+"=="                    { return EQUALS; }
+"="                     { return ASSIGNMENT; }
+";"                     { return SEMICOLON; }
+"+"                     { return ADD; }
+"-"                     { return SUBTRACT; }
+"*"                     { return MULTIPLY; }
+"/"                     { return DIVIDE; }
+"("                     { return PAROPEN; }
+")"                     { return PARCLOSE; }
+"{"                     { return CBOPEN; }
+"}"                     { return CBCLOSE; }
+"write"                 { return WRITE; }
+"exit"                  { return EXIT; }
+"if"                    { return IF; }
+"else"                  { return ELSE; }
+"elseif"                { return ELSEIF; }
+"while"                 { return WHILE; }
+"for"                   { return FOR; }
+"return"                { return RETURN; }
+"true"                  { return BOOLEAN; }
+"false"                 { return BOOLEAN; }
+[0-9]+                  { yylval.number = atoi(yytext); return INTEGER; }
+[0-9]+"."[0-9]*         { yylval.decimal = atof(yytext); return DECIMAL; }
+[a-zA-Z_][a-zA-Z0-9_]*  { yylval.identifier = strdup(yytext); return IDENTIFIER; }
 %%
-int yywrap(void){
-        return 1;
-
-}
