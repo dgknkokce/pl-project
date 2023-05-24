@@ -19,4 +19,4 @@ int main(int argc, char** argv) {
         perror("fopen");
         return 1;
     }
-
+}
