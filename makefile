@@ -1,16 +1,7 @@
-CC = gcc
-LEX = flex
-YACC = bison
-CFLAGS = -Wall
-
-lang: lang.tab.o lex.yy.o
-	$(CC) $(CFLAGS) -o $@ $^
-
-lang.tab.c lang.tab.h: lang.y
-	$(YACC) -d $<
-
-lex.yy.c: lang.l lang.tab.h
-	$(LEX) $<
+lang: lang.l lang.y
+    lex lang.l
+    yacc -d lang.y
+    gcc lex.yy.c y.tab.c myscanner.c -o test -ll
 
 clean:
-	rm -f lang .o lex.yy.c lang.tab.
+    rm lex.yy.c y.tab.c y.tab.h test
