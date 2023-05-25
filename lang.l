@@ -19,6 +19,8 @@ for                    return 22;
 else                   return 23;
 "<"                    return 24;
 ">"                    return 25;
+"&&"                   return 26;
+"||"                   return 27;
 true|false             return 14;
 func                   return 15;
 "{"                    return 16;
