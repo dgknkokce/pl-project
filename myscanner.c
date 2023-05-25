@@ -11,7 +11,7 @@ int main(void) {
 
     token = yylex();
     while (token) {
-        printf("Token %s is seen on line %d: %s\n", text[token], yylineno, yytext);
+        printf("Token %s is seen on line %d: %s\n", token, yylineno, yytext);
         token = yylex();
 
         if (yylineno != templineno) {
