@@ -1,5 +1,7 @@
-lang:lang.l
-	 lex lang.l
-	gcc myscanner.c lex.yy.c -o test
+lang: lang.l lang.y
+	lex lang.l
+	yacc -d lang.y
+	gcc lex.yy.c y.tab.c -o lang -ll
+
 clean:
-	 rm lang lex.yy.c
+	rm lex.yy.c y.tab.c y.tab.h lang

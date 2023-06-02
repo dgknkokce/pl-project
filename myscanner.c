@@ -1,23 +1,24 @@
-
-#include<stdio.h>
+#include <stdio.h>
 #include "mylangcommon.h"
 
-extern int yylex(); // It will return the tokens  1,2,3,4.... that corresponds to INTEGER, IDENTIFIER, etc.
-extern int yylineno; //Current line number that our scanner is in
-extern char* yytext; //is current actual lexeme
+extern int yylex();
+extern int yylineno;
+extern char* yytext;
 
-DEFINETOKENS
+int main(void) {
+    int token;
+    int templineno = yylineno;
 
-int main(void){
-        int templineno=yylineno;
-	int token=yylex();
-	while(token){		printf("Token %s is seen on line %d is %s\n",text[token], yylineno, yytext);
-		token=yylex();
-	if(yylineno!=templineno){
-		printf("\n");
- 		templineno=yylineno;
-	}
-	}
+    token = yylex();
+    while (token) {
+        printf("Token %d is seen on line %d: %s\n", token, yylineno, yytext);
+        token = yylex();
 
-	return 0; 
+        if (yylineno != templineno) {
+            printf("\n");
+            templineno = yylineno;
+        }
+    }
+
+    return 0;
 }
