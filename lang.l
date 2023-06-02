@@ -1,40 +1,40 @@
 %{
+#include <stdio.h>
 #include "mylangcommon.h"
 %}
 
 %%
-"WRITE"                return 5;
-"EXIT"                 return 8;
-"("                    return 6;
-")"                    return 7;
-"+"                    return 9;
-"*"                    return 10;
-"-"                    return 11;
-"/"                    return 12;
-"="                    return 4;
-if                     return 19;
-elseif                 return 20;
-while                  return 21;
-for                    return 22;
-else                   return 23;
-"<"                    return 24;
-">"                    return 25;
-"&&"                   return 26;
-"||"                   return 27;
-true|false             return 14;
-func                   return 15;
-"{"                    return 16;
-"}"                    return 17;
-return                 return 18;
-[-]?[a-zA-Z]+          return 1;
-[-]?[0-9]+             return 2;
-[-]?[0-9]+\.[0-9]+     return 3;
-[ \t]                  ;
-";"                    return 13;
-"\n"		       {yylineno++;}
-.                      printf("Error, unexpected character in line %d !\n", yylineno);
+WRITE                 return WRITE;
+EXIT                  return EXIT;
+\(                    return PAROPEN;
+\)                    return PARCLOSE;
+\+                    return ADD;
+\*                    return MULTIPLY;
+\-                    return SUBTRACT;
+\/                    return DIVIDE;
+\=                    return EQUALS;
+if                    return IF;
+elseif                return ELSEIF;
+while                 return WHILE;
+for                   return FOR;
+else                  return ELSE;
+\<                    return LOWER;
+\>                    return GREATER;
+\&\&                  return AND;
+\|\|                  return OR;
+true|false            return BOOLEAN;
+func                  return FUNCTION;
+\{                    return CBOPEN;
+\}                    return CBCLOSE;
+[-]?[a-zA-Z]+         return IDENTIFIER;
+[-]?[0-9]+            return INTEGER;
+[-]?[0-9]+\.[0-9]+    return DOUBLE;
+[ \t]                 ;
+\;                    return SEMICOLON;
+\n                    { yylineno++; }
+.                     printf("Error, unexpected character in line %d!\n", yylineno);
 %%
-int yywrap(void){
-        return 1;
 
+int yywrap(void) {
+    return 1;
 }
