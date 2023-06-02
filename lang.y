@@ -12,7 +12,26 @@ void yyerror(const char* s) {
 
 %}
 
-%token IDENTIFIER INTEGER DOUBLE EQUALS WRITE PAROPEN PARCLOSE EXIT ADD MULTIPLY SUBTRACT DIVIDE SEMICOLON BOOLEAN FUNCTION CBOPEN CBCLOSE RETURN IF ELSEIF WHILE FOR ELSE LOWER GREATER AND OR
+%token <sval> IDENTIFIER
+%token <ival> INTEGER
+%token <dval> DOUBLE
+%token WRITE EXIT PAROPEN PARCLOSE ADD MULTIPLY SUBTRACT DIVIDE EQUALS SEMICOLON BOOLEAN FUNCTION CBOPEN CBCLOSE RETURN IF ELSEIF WHILE FOR ELSE LOWER GREATER AND OR
+
+%left LOWER GREATER
+%left ADD SUBTRACT
+%left MULTIPLY DIVIDE
+%left UMINUS
+
+%union {
+    int ival;
+    double dval;
+    char* sval;
+}
+
+%token <ival> NUMBER
+%token <sval> STRING
+
+%type <sval> program statement assignment function_declaration parameter_list control_structure if_statement while_statement for_statement expression logical_expression relational_expression arithmetic_expression term factor
 
 %%
 
